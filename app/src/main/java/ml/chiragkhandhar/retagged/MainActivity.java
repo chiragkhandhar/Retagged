@@ -53,6 +53,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     private String location, city, region, zip, country;
     private Double latitude;
     private Double longitude;
+    private HashMap<ArrayList<String>,ArrayList<Double>> hm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         selectedImage = findViewById(R.id.selected_image);
         labelResults = findViewById(R.id.tv_label_results);
         locationResults = findViewById(R.id.tv_location);
+        hm = new HashMap<>();
     }
 
     public void selectImage(View view)
@@ -310,23 +313,31 @@ public class MainActivity extends AppCompatActivity
     private String getDetectedLandmark(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
         List<EntityAnnotation> labels = response.getResponses().get(0).getLandmarkAnnotations();
+        ArrayList<String> locations = new ArrayList<>();
+        ArrayList<Double> doubles = new ArrayList<>();
         if (labels != null)
         {
             Double score = Double.MIN_VALUE;
             for (EntityAnnotation label : labels) {
                 score = Math.max(label.getScore(), score);
+
             }
             for(EntityAnnotation label:labels){
+                locations.add(label.getDescription());
                 List<LocationInfo> info = label.getLocations();
                 if(label.getScore()>=score) {
                     for (LocationInfo info1 : info) {
                         location = label.getDescription();
                         latitude = info1.getLatLng().getLatitude();
                         longitude = info1.getLatLng().getLongitude();
+                        doubles.add(latitude);
+                        doubles.add(longitude);
                         Log.d(TAG, "getDetectedLandmark: "+location+" "+" latitude="+latitude+" longitutde"+longitude);
                     }
                 }
             }
+            hm.put(locations,doubles);
+            Log.d(TAG, "getDetectedLandmark: "+hm);
         }
         else
         {
