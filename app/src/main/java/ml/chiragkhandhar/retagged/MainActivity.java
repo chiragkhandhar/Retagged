@@ -298,8 +298,8 @@ public class MainActivity extends AppCompatActivity
                     for (LocationInfo info1 : info) {
                         location = label.getDescription();
                         latitude = info1.getLatLng().getLatitude();
-                        latitude = info1.getLatLng().getLongitude();
-                        Log.d(TAG, "getDetectedLandmark: "+location);
+                        longitude = info1.getLatLng().getLongitude();
+                        Log.d(TAG, "getDetectedLandmark: "+location+" "+" latitude="+latitude+" longitutde"+longitude);
                     }
                 }
             }
