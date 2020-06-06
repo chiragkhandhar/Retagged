@@ -44,4 +44,5 @@ dependencies {
     implementation ('com.google.http-client:google-http-client-gson:1.20.0') {
         exclude module: 'httpclient'
     }
+    implementation 'com.google.android.material:material:1.1.0'
 }

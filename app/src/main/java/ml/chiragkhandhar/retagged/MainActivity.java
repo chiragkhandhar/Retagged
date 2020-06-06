@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity
     private TextView textResults;
     private TextView locationResults;
     private Account mAccount;
-    private Button selectImageButton;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -74,8 +73,6 @@ public class MainActivity extends AppCompatActivity
     void setupComponents()
     {
         mProgressDialog = new ProgressDialog(this);
-
-        selectImageButton = findViewById(R.id.select_image_button);
         selectedImage = findViewById(R.id.selected_image);
         labelResults = findViewById(R.id.tv_label_results);
         textResults = findViewById(R.id.tv_texts_results);

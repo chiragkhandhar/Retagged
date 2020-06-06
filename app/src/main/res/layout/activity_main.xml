@@ -64,21 +64,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/default_texts"
-            app:layout_constraintBottom_toTopOf="@+id/select_image_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_label_results" />
 
-        <Button
-            android:id="@+id/select_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:onClick="selectImage"
-            android:text="@string/choose_an_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
 
         <TextView
             android:id="@+id/tv_location"
@@ -92,6 +82,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selected_image" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@color/colorPrimary"
+            android:clickable="true"
+            android:onClick="selectImage"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_insert_photo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
