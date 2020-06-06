@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Retagged</string>
+    <string name="selected_image">Selected Image</string>
+    <string name="labels">Labels</string>
+    <string name="texts">Texts:</string>
+    <string name="default_texts">-</string>
+    <string name="choose_an_image">Select Image</string>
 </resources>
