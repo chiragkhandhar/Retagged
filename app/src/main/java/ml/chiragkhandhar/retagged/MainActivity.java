@@ -17,8 +17,10 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,10 +65,13 @@ public class MainActivity extends AppCompatActivity
     private static String accessToken;
     private ImageView selectedImage;
     private TextView labelResults;
-    private TextView textResults;
     private TextView locationResults;
     private Account mAccount;
     private ProgressDialog mProgressDialog;
+
+    private long lastClickTime = 0;
+
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -81,12 +86,17 @@ public class MainActivity extends AppCompatActivity
         mProgressDialog = new ProgressDialog(this);
         selectedImage = findViewById(R.id.selected_image);
         labelResults = findViewById(R.id.tv_label_results);
-        textResults = findViewById(R.id.tv_texts_results);
         locationResults = findViewById(R.id.tv_location);
     }
 
     public void selectImage(View view)
     {
+        // preventing double, using threshold of 1000 ms
+        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
+            return;
+        }
+        lastClickTime = SystemClock.elapsedRealtime();
+
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS);
     }
 
@@ -244,7 +254,6 @@ public class MainActivity extends AppCompatActivity
             {
                 mProgressDialog.dismiss();
                 locationResults.setText(getDetectedLandmark(response));
-                textResults.setText(getDetectedTexts(response));
                 labelResults.setText(getDetectedLabels(response));
             }
 
@@ -295,27 +304,6 @@ public class MainActivity extends AppCompatActivity
         }
         return message.toString();
     }
-
-
-    private String getDetectedTexts(BatchAnnotateImagesResponse response){
-        StringBuilder message = new StringBuilder();
-        List<EntityAnnotation> texts = response.getResponses().get(0).getTextAnnotations();
-        if (texts != null)
-        {
-            for (EntityAnnotation text : texts)
-            {
-                message.append(String.format(Locale.getDefault(), "%s: %s", text.getLocale(), text.getDescription()));
-                message.append("\n");
-            }
-        }
-        else
-        {
-            message.append("nothing\n");
-        }
-
-        return message.toString();
-    }
-
 
     public Image getBase64EncodedJpeg(Bitmap bitmap)
     {
