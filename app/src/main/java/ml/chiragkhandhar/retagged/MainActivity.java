@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,15 +35,20 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.LocationInfo;
+
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -181,7 +187,8 @@ public class MainActivity extends AppCompatActivity
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-                    Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, credential);
+                    Vision.Builder builder = new Vision.Builder
+                            (httpTransport, jsonFactory, credential);
                     Vision vision = builder.build();
 
                     List<Feature> featureList = new ArrayList<>();
@@ -209,10 +216,12 @@ public class MainActivity extends AppCompatActivity
                     annotateImageRequest.setFeatures(featureList);
                     imageList.add(annotateImageRequest);
 
-                    BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
+                    BatchAnnotateImagesRequest batchAnnotateImagesRequest =
+                            new BatchAnnotateImagesRequest();
                     batchAnnotateImagesRequest.setRequests(imageList);
 
-                    Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
+                    Vision.Images.Annotate annotateRequest =
+                            vision.images().annotate(batchAnnotateImagesRequest);
                     annotateRequest.setDisableGZipContent(true);
                     Log.d(TAG, "Sending request to Google Cloud");
 
@@ -243,7 +252,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private String getDetectedLabels(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
@@ -251,7 +259,8 @@ public class MainActivity extends AppCompatActivity
         {
             for (EntityAnnotation label : labels)
             {
-                message.append(String.format(Locale.getDefault(), "%.3f: %s", label.getScore(), label.getDescription()));
+                message.append(String.format(Locale.getDefault(), "%.3f: %s",
+                        label.getScore(), label.getDescription()));
                 message.append("\n");
             }
         }
@@ -270,7 +279,12 @@ public class MainActivity extends AppCompatActivity
         {
             for (EntityAnnotation label : labels)
             {
-                message.append(label.getLocations()+" "+label.getDescription());
+                message.append("Place-->"+label.getDescription());
+                List<LocationInfo> info = label.getLocations();
+                for(LocationInfo info1:info){
+                    message.append("Latitude-->"+info.get(0).getLatLng().getLatitude());
+                    message.append("Longitude-->"+info.get(0).getLatLng().getLongitude());
+                }
                 message.append("\n");
             }
 
@@ -281,6 +295,7 @@ public class MainActivity extends AppCompatActivity
         }
         return message.toString();
     }
+
 
     private String getDetectedTexts(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
