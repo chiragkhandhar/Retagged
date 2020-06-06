@@ -54,8 +54,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -147,7 +149,14 @@ public class MainActivity extends AppCompatActivity
         } catch (IOException e) {
             Log.d(TAG, "EXCEPTION | getLocation: bp: " + e);
         }
-        location = city + ", " + region + ", " + country + ", " + zip;
+
+        for (ArrayList<String> keys : hm.keySet()) {
+            for (String key : keys) {
+                location = location + "," + key;
+            }
+        }
+
+        location = location + ", " + city + ", " + region + ", " + country + ", " + zip;
         return location;
     }
 
@@ -320,12 +329,12 @@ public class MainActivity extends AppCompatActivity
             Double score = Double.MIN_VALUE;
             for (EntityAnnotation label : labels) {
                 score = Math.max(label.getScore(), score);
-
             }
-            for(EntityAnnotation label:labels){
+
+            for (EntityAnnotation label : labels) {
                 locations.add(label.getDescription());
-                List<LocationInfo> info = label.getLocations();
-                if(label.getScore()>=score) {
+                if (label.getScore() >= score) {
+                    List<LocationInfo> info = label.getLocations();
                     for (LocationInfo info1 : info) {
                         location = label.getDescription();
                         latitude = info1.getLatLng().getLatitude();
