@@ -184,8 +184,7 @@ public class MainActivity extends AppCompatActivity
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-                    Vision.Builder builder = new Vision.Builder
-                            (httpTransport, jsonFactory, credential);
+                    Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, credential);
                     Vision vision = builder.build();
 
                     List<Feature> featureList = new ArrayList<>();
@@ -213,12 +212,10 @@ public class MainActivity extends AppCompatActivity
                     annotateImageRequest.setFeatures(featureList);
                     imageList.add(annotateImageRequest);
 
-                    BatchAnnotateImagesRequest batchAnnotateImagesRequest =
-                            new BatchAnnotateImagesRequest();
+                    BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
                     batchAnnotateImagesRequest.setRequests(imageList);
 
-                    Vision.Images.Annotate annotateRequest =
-                            vision.images().annotate(batchAnnotateImagesRequest);
+                    Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
                     annotateRequest.setDisableGZipContent(true);
                     Log.d(TAG, "Sending request to Google Cloud");
 
@@ -257,8 +254,7 @@ public class MainActivity extends AppCompatActivity
         {
             for (EntityAnnotation label : labels)
             {
-                message.append(String.format(Locale.getDefault(), "%.3f: %s",
-                        label.getScore(), label.getDescription()));
+                message.append(String.format(Locale.getDefault(), "%.3f: %s", label.getScore(), label.getDescription()));
                 message.append("\n");
             }
         }
@@ -291,8 +287,7 @@ public class MainActivity extends AppCompatActivity
 
     private String getDetectedTexts(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
-        List<EntityAnnotation> texts = response.getResponses().get(0)
-                .getTextAnnotations();
+        List<EntityAnnotation> texts = response.getResponses().get(0).getTextAnnotations();
         if (texts != null)
         {
             for (EntityAnnotation text : texts)
