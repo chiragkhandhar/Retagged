@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity
     private long lastClickTime = 0;
 
     private String location;
+    private Double latitude;
+    private Double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -215,7 +217,7 @@ public class MainActivity extends AppCompatActivity
 
                     Feature landMark = new Feature();
                     landMark.setType("LANDMARK_DETECTION");
-                    landMark.setMaxResults(10);
+                    landMark.setMaxResults(4);
                     featureList.add(landMark);
 
 
@@ -286,17 +288,21 @@ public class MainActivity extends AppCompatActivity
         List<EntityAnnotation> labels = response.getResponses().get(0).getLandmarkAnnotations();
         if (labels != null)
         {
-            for (EntityAnnotation label : labels)
-            {
-                message.append("Place-->"+label.getDescription());
-                List<LocationInfo> info = label.getLocations();
-                for(LocationInfo info1:info){
-                    message.append("Latitude-->"+info.get(0).getLatLng().getLatitude());
-                    message.append("Longitude-->"+info.get(0).getLatLng().getLongitude());
-                }
-                message.append("\n");
+            Double score = Double.MIN_VALUE;
+            for (EntityAnnotation label : labels) {
+                score = Math.max(label.getScore(), score);
             }
-
+            for(EntityAnnotation label:labels){
+                List<LocationInfo> info = label.getLocations();
+                if(label.getScore()>=score) {
+                    for (LocationInfo info1 : info) {
+                        location = label.getDescription();
+                        latitude = info1.getLatLng().getLatitude();
+                        latitude = info1.getLatLng().getLongitude();
+                        Log.d(TAG, "getDetectedLandmark: "+location);
+                    }
+                }
+            }
         }
         else
         {
