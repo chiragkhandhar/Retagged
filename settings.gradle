@@ -1,0 +1,2 @@
+rootProject.name='Retagged'
+include ':app'
