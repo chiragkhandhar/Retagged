@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView selectedImage;
     private TextView labelResults;
     private TextView textResults;
+    private TextView locationResults;
     private Account mAccount;
     private Button selectImageButton;
     private ProgressDialog mProgressDialog;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         selectedImage = findViewById(R.id.selected_image);
         labelResults = findViewById(R.id.tv_label_results);
         textResults = findViewById(R.id.tv_texts_results);
+        locationResults = findViewById(R.id.tv_location);
     }
 
     public void selectImage(View view)
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity
                     Vision vision = builder.build();
 
                     List<Feature> featureList = new ArrayList<>();
+
                     Feature labelDetection = new Feature();
                     labelDetection.setType("LABEL_DETECTION");
                     labelDetection.setMaxResults(10);
@@ -196,6 +199,12 @@ public class MainActivity extends AppCompatActivity
                     textDetection.setType("TEXT_DETECTION");
                     textDetection.setMaxResults(10);
                     featureList.add(textDetection);
+
+                    Feature landMark = new Feature();
+                    landMark.setType("LANDMARK_DETECTION");
+                    landMark.setMaxResults(10);
+                    featureList.add(landMark);
+
 
                     List<AnnotateImageRequest> imageList = new ArrayList<>();
                     AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
@@ -231,12 +240,15 @@ public class MainActivity extends AppCompatActivity
             protected void onPostExecute(BatchAnnotateImagesResponse response)
             {
                 mProgressDialog.dismiss();
+                locationResults.setText(getDetectedLandmark(response));
                 textResults.setText(getDetectedTexts(response));
                 labelResults.setText(getDetectedLabels(response));
             }
 
         }.execute();
     }
+
+
 
     private String getDetectedLabels(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
@@ -255,6 +267,25 @@ public class MainActivity extends AppCompatActivity
             message.append("nothing\n");
         }
 
+        return message.toString();
+    }
+
+    private String getDetectedLandmark(BatchAnnotateImagesResponse response){
+        StringBuilder message = new StringBuilder();
+        List<EntityAnnotation> labels = response.getResponses().get(0).getLandmarkAnnotations();
+        if (labels != null)
+        {
+            for (EntityAnnotation label : labels)
+            {
+                message.append(label.getLocations()+" "+label.getDescription());
+                message.append("\n");
+            }
+
+        }
+        else
+        {
+            message.append("nothing\n");
+        }
         return message.toString();
     }
 
