@@ -5,4 +5,5 @@
     <string name="texts">Texts:</string>
     <string name="default_texts">-</string>
     <string name="choose_an_image">Select Image</string>
+    <string name="nothing_found">Nothing Found</string>
 </resources>

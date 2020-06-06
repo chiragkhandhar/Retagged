@@ -13,6 +13,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
     private long lastClickTime = 0;
 
-    private String location;
+    private String location, city, region, zip, country;
     private Double latitude;
     private Double longitude;
 
@@ -122,6 +124,28 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
         }
+    }
+
+    String getLocation(double lat, double lon) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses;
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+
+            if (addresses.size() == 0)
+                return "";
+
+            for (Address ad : addresses) {
+                city = ad.getLocality() == null ? "" : ad.getLocality();
+                region = ad.getAdminArea() == null ? "" : ad.getAdminArea();
+                zip = ad.getPostalCode() == null ? "" : ad.getPostalCode();
+                country = ad.getCountryName() == null ? "" : ad.getCountryName();
+            }
+        } catch (IOException e) {
+            Log.d(TAG, "EXCEPTION | getLocation: bp: " + e);
+        }
+        location = city + ", " + region + ", " + country + ", " + zip;
+        return location;
     }
 
     @Override
@@ -308,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         {
             message.append("nothing\n");
         }
-        return message.toString();
+        return getLocation(latitude, longitude);
     }
 
     public Image getBase64EncodedJpeg(Bitmap bitmap)
