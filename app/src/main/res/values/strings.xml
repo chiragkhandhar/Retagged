@@ -9,4 +9,6 @@
     <string name="nothing_found">Nothing Found</string>
     <string name="locationErrorTitle">Location not found</string>
     <string name="message">It seems that we were unable to identify the location in your picture.</string>
+    <string name="explore_around">Explore Around</string>
+    <string name="explore_icon">Explore Icon</string>
 </resources>

@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     private static String accessToken;
     private ImageView selectedImage;
     private TextView locationResults, selectedImage_tv;
+    private Button explorBtn;
     private Account mAccount;
     private ProgressDialog mProgressDialog;
 
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         locationResults = findViewById(R.id.tv_location);
+        explorBtn = findViewById(R.id.explor_btn);
         hm = new HashMap<>();
     }
 
@@ -436,5 +438,12 @@ public class MainActivity extends AppCompatActivity
     {
         accessToken = token;
         launchImagePicker();
+    }
+
+    public void startExploring(View view) {
+        Intent i = new Intent(this, ExploreActivity.class);
+        i.putExtra("latitude", latitude);
+        i.putExtra("longitude", longitude);
+        startActivity(i);
     }
 }
