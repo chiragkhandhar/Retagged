@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressLint("StaticFieldLeak")
     private void callCloudVision(final Bitmap bitmap) throws IOException {
-        mProgressDialog = ProgressDialog.show(this, null, "Identifying your location...", true);
+        mProgressDialog = ProgressDialog.show(this, null, "Identifying location...", true);
 
         new AsyncTask<Object, Void, BatchAnnotateImagesResponse>() {
             @Override
