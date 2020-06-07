@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     private static String accessToken;
     private ImageView selectedImage;
-    private TextView locationResults;
+    private TextView locationResults, selectedImage_tv;
     private Account mAccount;
     private ProgressDialog mProgressDialog;
 
@@ -92,7 +92,20 @@ public class MainActivity extends AppCompatActivity
     void setupComponents()
     {
         mProgressDialog = new ProgressDialog(this);
+        selectedImage_tv = findViewById(R.id.selected_image_txt);
         selectedImage = findViewById(R.id.selected_image);
+        selectedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // preventing double, using threshold of 1000 ms
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
+                    return;
+                }
+                lastClickTime = SystemClock.elapsedRealtime();
+
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_PERMISSIONS);
+            }
+        });
         locationResults = findViewById(R.id.tv_location);
         hm = new HashMap<>();
     }
@@ -169,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_GALLERY_IMAGE && resultCode == RESULT_OK && data != null)
         {
+            selectedImage_tv.setText(R.string.selected_image);
             performCloudVisionRequest(data.getData());
         }
         else if (requestCode == REQUEST_CODE_PICK_ACCOUNT)
@@ -295,9 +309,12 @@ public class MainActivity extends AppCompatActivity
             {
                 mProgressDialog.dismiss();
                 String temp = getDetectedLandmark(response);
-                if (temp != null)
+                if (temp != null) {
+
+                    locationResults.setVisibility(View.VISIBLE);
                     locationResults.setText(temp);
-                else {
+                } else {
+                    locationResults.setVisibility(View.GONE);
                     locationResults.setText(null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     AlertDialog dialog;
