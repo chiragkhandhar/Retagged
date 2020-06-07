@@ -36,7 +36,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreViewHolder> {
         Explore temp = exploreList.get(position);
         holder.name.setText(temp.getName());
         holder.type.setText(temp.getType());
-        holder.distance.setText(temp.getDistance()+"");
+        holder.distance.setText(temp.getDistance()+"mtr");
         holder.address.setText(temp.getAddress());
 
         ImageView picture = holder.icon;
