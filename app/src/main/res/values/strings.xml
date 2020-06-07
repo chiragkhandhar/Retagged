@@ -6,4 +6,6 @@
     <string name="default_texts">-</string>
     <string name="choose_an_image">Select Image</string>
     <string name="nothing_found">Nothing Found</string>
+    <string name="locationErrorTitle">Location not found</string>
+    <string name="message">It seems that we were unable to identify the location in your picture.</string>
 </resources>

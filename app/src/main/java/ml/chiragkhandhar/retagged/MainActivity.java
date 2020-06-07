@@ -2,6 +2,7 @@ package ml.chiragkhandhar.retagged;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -64,10 +65,11 @@ public class MainActivity extends AppCompatActivity
     static final int REQUEST_CODE_PICK_ACCOUNT = 101;
     static final int REQUEST_ACCOUNT_AUTHORIZATION = 102;
     static final int REQUEST_PERMISSIONS = 13;
+    static final double DEFAULT_LATITUDE = 500;
+    static final double DEFAULT_LONGITUDE = 500;
 
     private static String accessToken;
     private ImageView selectedImage;
-    private TextView labelResults;
     private TextView locationResults;
     private Account mAccount;
     private ProgressDialog mProgressDialog;
@@ -91,7 +93,6 @@ public class MainActivity extends AppCompatActivity
     {
         mProgressDialog = new ProgressDialog(this);
         selectedImage = findViewById(R.id.selected_image);
-        labelResults = findViewById(R.id.tv_label_results);
         locationResults = findViewById(R.id.tv_location);
         hm = new HashMap<>();
     }
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         location = location + ", " + city + ", " + region + ", " + country + ", " + zip;
+        Log.d(TAG, "getLocation: bp: Location: " + location);
         return location;
     }
 
@@ -224,7 +226,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressLint("StaticFieldLeak")
     private void callCloudVision(final Bitmap bitmap) throws IOException {
-        mProgressDialog = ProgressDialog.show(this, null,"Scanning image with Vision API...", true);
+        mProgressDialog = ProgressDialog.show(this, null, "Identifying your location...", true);
 
         new AsyncTask<Object, Void, BatchAnnotateImagesResponse>() {
             @Override
@@ -292,35 +294,30 @@ public class MainActivity extends AppCompatActivity
             protected void onPostExecute(BatchAnnotateImagesResponse response)
             {
                 mProgressDialog.dismiss();
-                locationResults.setText(getDetectedLandmark(response));
-                labelResults.setText(getDetectedLabels(response));
+                String temp = getDetectedLandmark(response);
+                if (temp != null)
+                    locationResults.setText(temp);
+                else {
+                    locationResults.setText(null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog dialog;
+
+                    builder.setIcon(R.drawable.ic_location_404);
+                    builder.setTitle(R.string.locationErrorTitle);
+                    builder.setMessage(R.string.message);
+
+                    dialog = builder.create();
+                    dialog.show();
+                }
             }
 
         }.execute();
     }
 
+    private String getDetectedLandmark(BatchAnnotateImagesResponse response) {
+        latitude = DEFAULT_LATITUDE;
+        longitude = DEFAULT_LONGITUDE;
 
-    private String getDetectedLabels(BatchAnnotateImagesResponse response){
-        StringBuilder message = new StringBuilder();
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        if (labels != null)
-        {
-            for (EntityAnnotation label : labels)
-            {
-                message.append(String.format(Locale.getDefault(), "%.3f: %s",
-                        label.getScore(), label.getDescription()));
-                message.append("\n");
-            }
-        }
-        else
-        {
-            message.append("nothing\n");
-        }
-
-        return message.toString();
-    }
-
-    private String getDetectedLandmark(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder();
         List<EntityAnnotation> labels = response.getResponses().get(0).getLandmarkAnnotations();
         hm.clear();
@@ -343,18 +340,21 @@ public class MainActivity extends AppCompatActivity
                         longitude = info1.getLatLng().getLongitude();
                         doubles.add(latitude);
                         doubles.add(longitude);
-                        Log.d(TAG, "getDetectedLandmark: "+location+" "+" latitude="+latitude+" longitutde"+longitude);
                     }
                 }
             }
             hm.put(locations,doubles);
-            Log.d(TAG, "getDetectedLandmark: "+hm);
         }
         else
         {
             message.append("nothing\n");
         }
-        return getLocation(latitude, longitude);
+        Log.d(TAG, "getDetectedLandmark: bp: Latitude: " + latitude + " Longitude: " + longitude);
+        if (latitude != DEFAULT_LATITUDE && longitude != DEFAULT_LONGITUDE)
+            return getLocation(latitude, longitude);
+        else {
+            return null;
+        }
     }
 
     public Image getBase64EncodedJpeg(Bitmap bitmap)
