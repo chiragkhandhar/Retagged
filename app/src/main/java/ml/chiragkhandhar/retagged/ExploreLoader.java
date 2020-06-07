@@ -87,7 +87,7 @@ public class ExploreLoader extends AsyncTask<ArrayList<Double>, Void, ArrayList<
                 JSONObject actual_icon = (JSONObject)icon.get("icon");
                 String prefix = actual_icon.getString("prefix");
                 String suffix = actual_icon.getString("suffix");
-                String photoUrl = prefix+"64"+suffix;
+                String photoUrl = prefix+"88"+suffix;
 
                 JSONObject location = venue.getJSONObject("location");
                 String name = venue.getString("name");
