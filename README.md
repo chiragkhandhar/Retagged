@@ -14,6 +14,9 @@
   <a style="text-decoration:none">
     <img src="https://img.shields.io/badge/Platform-Android-brightgreen" alt="Platform" />
   </a> 
+  <a style="text-decoration:none" href="https://github.com/chiragkhandhar/Retagged/releases/download/1.0/retagged.apk">
+    <img src="https://img.shields.io/badge/Download-App-red" alt="Platform" />
+  </a> 
 </p>
 
 
