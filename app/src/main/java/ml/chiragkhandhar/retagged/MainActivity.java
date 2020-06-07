@@ -312,10 +312,11 @@ public class MainActivity extends AppCompatActivity
                 mProgressDialog.dismiss();
                 String temp = getDetectedLandmark(response);
                 if (temp != null) {
-
+                    explorBtn.setVisibility(View.VISIBLE);
                     locationResults.setVisibility(View.VISIBLE);
                     locationResults.setText(temp);
                 } else {
+                    explorBtn.setVisibility(View.GONE);
                     locationResults.setVisibility(View.GONE);
                     locationResults.setText(null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
