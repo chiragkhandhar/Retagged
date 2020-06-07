@@ -1,5 +1,6 @@
 package ml.chiragkhandhar.retagged;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreViewHolder> {
         Explore temp = exploreList.get(position);
         holder.name.setText(temp.getName());
         holder.type.setText(temp.getType());
-        holder.distance.setText(temp.getDistance());
+        holder.distance.setText(temp.getDistance()+"");
         holder.address.setText(temp.getAddress());
 
         ImageView picture = holder.icon;
@@ -43,11 +44,12 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreViewHolder> {
         if (isNull(temp.getPhotoURL()))
             picture.setBackgroundResource(R.drawable.placeholder);
         else {
+            Log.d(TAG, "onBindViewHolder: "+temp.getPhotoURL());
             Glide.with(exploreActivity)
                     .load(temp.getPhotoURL())
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.error)
-                    .into(picture);
+                    .into(holder.icon);
         }
 
     }

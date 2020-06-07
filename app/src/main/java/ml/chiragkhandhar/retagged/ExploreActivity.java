@@ -1,6 +1,7 @@
 package ml.chiragkhandhar.retagged;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -17,6 +18,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
     double latitude, longitude;
     private ArrayList<Explore> exploreArrayList = new ArrayList<>();
     private static final String TAG = "ExploreActivity";
+    private ExploreAdapter exploreAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,9 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_explore);
         setupComponents();
         new ExploreLoader(ExploreActivity.this).execute(ll);
+        exploreAdapter = new ExploreAdapter(exploreArrayList,this);
+        rv.setAdapter(exploreAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
     }
 
     void setupComponents() {
@@ -33,8 +38,15 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         ll.add(getIntent().getExtras().getDouble("longitude"));
     }
 
-    void updateRecycler(ArrayList<Explore> tempList) {
 
+    void updateRecycler(ArrayList<Explore> tempList) {
+        Log.d(TAG, "updateRecycler: "+tempList.size());
+        exploreArrayList.clear();
+        if(tempList.size()!=0)
+        {
+            exploreArrayList.addAll(tempList);
+        }
+        exploreAdapter.notifyDataSetChanged();
     }
 
     @Override
