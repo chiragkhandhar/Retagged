@@ -147,6 +147,10 @@ public class MainActivity extends AppCompatActivity
 
     String getLocation(double lat, double lon) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        city = "";
+        region = "";
+        zip = "";
+        country = "";
         try {
             List<Address> addresses;
             addresses = geocoder.getFromLocation(lat, lon, 1);
