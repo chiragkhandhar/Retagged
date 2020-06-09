@@ -27,6 +27,12 @@ We have all been in a situation where we see a beautiful picture of a place post
 
 So, we decided to take a better step at helping humanity with this process. We have built an android app that recognizes the exact location of the place in the image you want to visit and recommends popular places near that location. Basically, we have your entire custom made trip planned.😏 
 
+<p align="center">
+   <a style="text-decoration:none" href="https://www.youtube.com/watch?v=P01V-E9tb9Q">
+    <img src="https://user-images.githubusercontent.com/37962354/84115803-4ac8a800-a9f4-11ea-9c96-8d89b7e4113d.png" alt="version" width ="720px"/>
+  </a>
+</p>
+
 ## What it does ?
 
 Retagged is an efficient, custom-tailored travel app that combines Machine learning and Google Cloud API with Places API. Retagged helps you find those exact (**Retagging**) places from "those" images on Social media which does not have any info attached to it. We also suggest the most popular places visited by people around those places. This will help you save money by visiting places in a single trip or future trip planning.
